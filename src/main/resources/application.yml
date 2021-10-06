@@ -1,0 +1,7 @@
+spring:
+  mandatory-file-encoding: UTF-8
+server:
+  servlet:
+    encoding:
+      enabled: true
+      charset: UTF-8
