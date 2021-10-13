@@ -120,9 +120,17 @@ public class MyenApplication implements CommandLineRunner {
                 strings.add(line.trim());
             }
         }
+        /*Map<String, List<String>> listMap = strings
+                .stream()
+                .collect(Collectors.groupingBy(x -> x.substring(0, 1).toLowerCase(Locale.ROOT)));*/
+
         Map<String, List<String>> listMap = strings
                 .stream()
-                .collect(Collectors.groupingBy(x -> x.substring(0, 1).toLowerCase(Locale.ROOT)));
+                .collect(Collectors.groupingBy(x -> x.substring(0, 1).toLowerCase(Locale.ROOT),
+                        Collectors.mapping(x -> {
+                            int i = x.indexOf("[");
+                            return x.substring(0, i) + "======================" + x.substring(i);
+                        }, Collectors.toList())));
 
         F_MAP.putAll(listMap);
     }
