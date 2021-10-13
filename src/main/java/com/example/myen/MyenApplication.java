@@ -64,6 +64,12 @@ public class MyenApplication implements CommandLineRunner {
         F_MAP.put(k, strings);
     }
 
+    @GetMapping("/l")
+    @ResponseBody
+    public void l() throws Exception {
+        load();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(MyenApplication.class, args);
     }
@@ -72,6 +78,10 @@ public class MyenApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         //Resource resource = new ClassPathResource("classpath:en/en.txt");
+
+    }
+
+    private void load() throws Exception{
         Resource resource = resourceLoader.getResource("classpath:en/en.txt");
 
         List<String> strings = new ArrayList<>();
