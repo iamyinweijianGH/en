@@ -35,7 +35,8 @@ import java.util.stream.Collectors;
 public class MyenApplication implements CommandLineRunner {
 
     public final Map<String, List<String>> F_MAP = new HashMap<>();
-    public final Set<String> F_SET = new HashSet<>();
+    public final Set<String> SET_2 = new HashSet<>();
+    public final Set<String> SET_3 = new HashSet<>();
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -48,8 +49,8 @@ public class MyenApplication implements CommandLineRunner {
         return "index";
     }
 
-    @GetMapping("/r")
-    public Object r(Model model) {
+    @GetMapping("/o/1")
+    public Object o1(Model model) {
         Collection<List<String>> values = F_MAP.values();
         List<String> strings = values.stream().flatMap(List::stream).collect(Collectors.toList());
         Collections.shuffle(strings);
@@ -57,9 +58,17 @@ public class MyenApplication implements CommandLineRunner {
         return "index";
     }
 
-    @GetMapping("/rr")
-    public Object rr(Model model) {
-        List<String> strings = new ArrayList<>(F_SET);
+    @GetMapping("/o/2")
+    public Object o2(Model model) {
+        List<String> strings = new ArrayList<>(SET_2);
+        Collections.shuffle(strings);
+        model.addAttribute("list", strings);
+        return "index";
+    }
+
+    @GetMapping("/o/3")
+    public Object o3(Model model) {
+        List<String> strings = new ArrayList<>(SET_3);
         Collections.shuffle(strings);
         model.addAttribute("list", strings);
         return "index";
@@ -69,8 +78,13 @@ public class MyenApplication implements CommandLineRunner {
     @ResponseBody
     public void r(@RequestBody JSONObject jsonObject) {
         String key = jsonObject.getString("key");
+        if (SET_2.contains(key)) {
+            SET_2.remove(key);
+            SET_3.add(key);
+        } else {
+            SET_2.add(key);
+        }
         String k = key.substring(0, 1);
-        F_SET.add(k);
         List<String> strings = F_MAP.get(k);
         strings.remove(key);
         F_MAP.put(k, strings);
@@ -79,7 +93,8 @@ public class MyenApplication implements CommandLineRunner {
     @GetMapping("/l")
     @ResponseBody
     public void l() throws Exception {
-        F_SET.clear();
+        SET_2.clear();
+        SET_3.clear();
         F_MAP.clear();
         load();
     }
