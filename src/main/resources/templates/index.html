@@ -3,10 +3,32 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                console.log($(this).text());
+                $.ajax({
+                    url : "/ok",
+                    type : "POST",
+                    contentType: "application/json;charset=utf-8",
+                    data : JSON.stringify({'key':$(this).text()}),
+                    dataType : "json",
+                    success : function(result) {
+                        //console.log(JSON.stringify(result));
+                    },
+                    error:function(msg){
+                        //$(".notice").html('Error:'+msg);
+                    }
+                })
+            });
+        });
+    </script>
 </head>
 <body>
 <div th:each="item, custStat : ${list}">
-    <p th:text="${item}" />
+    <button th:text="${item}" />
+    <br/>
 </div>
 </body>
 </html>
