@@ -79,6 +79,8 @@ public class MyenApplication implements CommandLineRunner {
     @GetMapping("/l")
     @ResponseBody
     public void l() throws Exception {
+        F_SET.clear();
+        F_MAP.clear();
         load();
     }
 
