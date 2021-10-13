@@ -106,7 +106,7 @@ public class MyenApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        //Resource resource = new ClassPathResource("classpath:en/en.txt");
+        load();
 
     }
 
