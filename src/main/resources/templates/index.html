@@ -8,6 +8,7 @@
         $(document).ready(function(){
             $("button").click(function(){
                 console.log($(this).text());
+                $(this).parent().remove();
                 $.ajax({
                     url : "/ok",
                     type : "POST",
@@ -27,8 +28,7 @@
 </head>
 <body>
 <div th:each="item, custStat : ${list}">
-    <button th:text="${item}" />
-    <br/>
+    <button th:text="${item}" style="margin-bottom: 10px"/>
 </div>
 </body>
 </html>
