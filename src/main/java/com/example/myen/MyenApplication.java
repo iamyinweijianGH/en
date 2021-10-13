@@ -54,6 +54,7 @@ public class MyenApplication implements CommandLineRunner {
         Collection<List<String>> values = F_MAP.values();
         List<String> strings = values.stream().flatMap(List::stream).collect(Collectors.toList());
         Collections.shuffle(strings);
+        strings.add(0, "数量：" + strings.size());
         model.addAttribute("list", strings);
         return "index";
     }
@@ -62,6 +63,7 @@ public class MyenApplication implements CommandLineRunner {
     public Object o2(Model model) {
         List<String> strings = new ArrayList<>(SET_2);
         Collections.shuffle(strings);
+        strings.add(0, "数量：" + strings.size());
         model.addAttribute("list", strings);
         return "index";
     }
@@ -70,6 +72,7 @@ public class MyenApplication implements CommandLineRunner {
     public Object o3(Model model) {
         List<String> strings = new ArrayList<>(SET_3);
         Collections.shuffle(strings);
+        strings.add(0, "数量：" + strings.size());
         model.addAttribute("list", strings);
         return "index";
     }
@@ -105,9 +108,7 @@ public class MyenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         load();
-
     }
 
     private void load() throws Exception{
