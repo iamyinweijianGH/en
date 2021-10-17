@@ -11,9 +11,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.BufferedReader;
@@ -34,71 +34,65 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 public class MyenApplication implements CommandLineRunner {
 
-    public final Map<String, List<String>> F_MAP = new HashMap<>();
-    public final Set<String> SET_2 = new HashSet<>();
-    public final Set<String> SET_3 = new HashSet<>();
+    public final Map<String, List<String>> FIRST_WOLD = new HashMap<>();
+    public final Set<String> SECOND_WOLD = new HashSet<>();
+    public final Set<String> THIRD_WOLD = new HashSet<>();
 
     @Autowired
     ResourceLoader resourceLoader;
 
-    @GetMapping("/index")
-    public Object en(@RequestParam(name = "key", required = false, defaultValue = "a") String key, Model model) {
-        List<String> strings = F_MAP.get(key);
-        Collections.shuffle(strings);
-        model.addAttribute("list", strings);
-        return "index";
-    }
-
-    @GetMapping("/o/1")
-    public Object o1(Model model) {
-        Collection<List<String>> values = F_MAP.values();
-        List<String> strings = values.stream().flatMap(List::stream).collect(Collectors.toList());
-        Collections.shuffle(strings);
-        strings.add(0, "数量：" + strings.size());
-        model.addAttribute("list", strings);
-        return "index";
-    }
-
-    @GetMapping("/o/2")
-    public Object o2(Model model) {
-        List<String> strings = new ArrayList<>(SET_2);
-        Collections.shuffle(strings);
-        strings.add(0, "数量：" + strings.size());
-        model.addAttribute("list", strings);
-        return "index";
-    }
-
-    @GetMapping("/o/3")
-    public Object o3(Model model) {
-        List<String> strings = new ArrayList<>(SET_3);
-        Collections.shuffle(strings);
-        strings.add(0, "数量：" + strings.size());
-        model.addAttribute("list", strings);
-        return "index";
-    }
-
-    @PostMapping("/ok")
-    @ResponseBody
-    public void r(@RequestBody JSONObject jsonObject) {
-        String key = jsonObject.getString("key");
-        if (SET_2.contains(key)) {
-            SET_2.remove(key);
-            SET_3.add(key);
-        } else {
-            SET_2.add(key);
+    @GetMapping("/index/{id}")
+    public Object o1(@PathVariable("id") Long id, Model model) {
+        List<String> strings = null;
+        if (id == 1L) {
+            Collection<List<String>> values = FIRST_WOLD.values();
+            strings = values.stream().flatMap(List::stream).collect(Collectors.toList());
+        } else if (id == 2L) {
+            strings = new ArrayList<>(SECOND_WOLD);
+        } else if (id == 3L) {
+            strings = new ArrayList<>(THIRD_WOLD);
         }
-        String k = key.substring(0, 1);
-        List<String> strings = F_MAP.get(k);
-        strings.remove(key);
-        F_MAP.put(k, strings);
+        Collections.shuffle(strings);
+        strings.add(0, "数量：" + strings.size());
+        model.addAttribute("list", strings);
+        return "index" + id;
     }
 
-    @GetMapping("/l")
+    @PostMapping("/ok/{id}")
+    @ResponseBody
+    public void ok(@PathVariable("id") Long id, @RequestBody JSONObject jsonObject) {
+        String key = jsonObject.getString("key");
+        if (id == 2L) {
+            SECOND_WOLD.add(key);
+            String k = key.substring(0, 1);
+            List<String> strings = FIRST_WOLD.get(k);
+            strings.remove(key);
+            FIRST_WOLD.put(k, strings);
+        } else if (id == 3L) {
+            SECOND_WOLD.remove(key);
+            THIRD_WOLD.add(key);
+        }
+    }
+
+    @PostMapping("/bad/{id}")
+    @ResponseBody
+    public void bad(@PathVariable("id") Long id, @RequestBody JSONObject jsonObject) {
+        String key = jsonObject.getString("key");
+        if (id == 2L) {
+            SECOND_WOLD.remove(key);
+            String k = key.substring(0, 1);
+            List<String> strings = FIRST_WOLD.get(k);
+            strings.add(key);
+            FIRST_WOLD.put(k, strings);
+        }
+    }
+
+    @GetMapping("/refresh")
     @ResponseBody
     public void l() throws Exception {
-        SET_2.clear();
-        SET_3.clear();
-        F_MAP.clear();
+        SECOND_WOLD.clear();
+        THIRD_WOLD.clear();
+        FIRST_WOLD.clear();
         load();
     }
 
@@ -132,6 +126,6 @@ public class MyenApplication implements CommandLineRunner {
                             return x.substring(0, i) + "======================" + x.substring(i);
                         }, Collectors.toList())));
 
-        F_MAP.putAll(listMap);
+        FIRST_WOLD.putAll(listMap);
     }
 }
