@@ -29,6 +29,7 @@
 <body>
 <div th:each="item, custStat : ${list}">
     <button th:text="${item}" style="margin-bottom: 10px"/>
+    <hr th:if="${custStat.index} == 9" />
 </div>
 </body>
 </html>
