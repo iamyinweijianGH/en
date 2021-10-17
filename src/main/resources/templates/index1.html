@@ -10,25 +10,24 @@
                 console.log($(this).text());
                 $(this).parent().remove();
                 $.ajax({
-                    url : "/ok",
+                    url : "/ok/2",
                     type : "POST",
                     contentType: "application/json;charset=utf-8",
                     data : JSON.stringify({'key':$(this).text()}),
                     dataType : "json",
                     success : function(result) {
-                        //console.log(JSON.stringify(result));
                     },
                     error:function(msg){
-                        //$(".notice").html('Error:'+msg);
                     }
                 })
             });
+
         });
     </script>
 </head>
 <body>
 <div th:each="item, custStat : ${list}">
-    <button th:text="${item}" style="margin-bottom: 10px"/>
+    <button class="b" th:text="${item}" style="margin-bottom: 10px"/>
     <hr th:if="${custStat.index} == 9" />
 </div>
 </body>
