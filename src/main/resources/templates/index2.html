@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            $(".b").click(function(){
+                console.log($(this).text());
+                $(this).parent().remove();
+                $.ajax({
+                    url : "/ok/3",
+                    type : "POST",
+                    contentType: "application/json;charset=utf-8",
+                    data : JSON.stringify({'key':$(this).text()}),
+                    dataType : "json",
+                    success : function(result) {
+                    },
+                    error:function(msg){
+                    }
+                })
+            });
+
+            $(".x").click(function(){
+                console.log($(this).attr("vv"));
+                $(this).parent().remove();
+                $.ajax({
+                    url : "/bad/2",
+                    type : "POST",
+                    contentType: "application/json;charset=utf-8",
+                    data : JSON.stringify({'key':$(this).attr("vv")}),
+                    dataType : "json",
+                    success : function(result) {
+                    },
+                    error:function(msg){
+                    }
+                })
+            });
+
+        });
+    </script>
+</head>
+<body>
+<div th:each="item, custStat : ${list}">
+    <button class="b" th:text="${item}" style="margin-bottom: 10px"/>
+    <button class="x" th:vv = "${item}" >X</button>
+    <hr th:if="${custStat.index} == 9" />
+</div>
+</body>
+</html>
